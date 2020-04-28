@@ -4,39 +4,70 @@ require_once('./checkSession.php');
 
 //引用資料庫連線
 require_once('./db.inc.php');
+?>
+<!DOCTYPYE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的 PHP 程式</title>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
 
-//先查詢出特定 companyId (editId) 資料欄位
-$sqlGetId = "SELECT `companyId` FROM `company` WHERE `companyId` = ? ";
-$stmtGetId = $pdo->prepare($sqlGetId);
+    <!-- title -->
+    <header class="header">
+        <p>Music Classroom</p>
+        <a href="./logout.php?logout=1">登出</a>
+    </header>
 
-//加入繫結陣列
-$arrGetIdParam = [
-    $_GET['deleteId']
-];
+    <div class="wrap">
+         <!-- 左側功能列表 -->
+        <div class="left-wrap">
+            <?php require_once("./list.php"); ?>
+        </div>
 
-//執行 SQL 語法
-$stmtGetId->execute($arrGetIdParam);
+        <!-- 右側廠商列表 -->
+        <div class="right-wrap">
 
-//若有找到 stmtGetId 的資料
-if($stmtGetId->rowCount() > 0) {
-    //取得指定 companyId 的資料 (1筆)
-    $arrId = $stmtGetId->fetchAll(PDO::FETCH_ASSOC);     
-}
+            <?php
+                //先查詢出特定 companyId (editId) 資料欄位
+                $sqlGetId = "SELECT `companyId` FROM `company` WHERE `companyId` = ? ";
+                $stmtGetId = $pdo->prepare($sqlGetId);
 
-//SQL 語法
-$sql = "DELETE FROM `company` WHERE `companyId` = ? ";
+                //加入繫結陣列
+                $arrGetIdParam = [
+                    $_GET['deleteId']
+                ];
 
-$arrParam = [
-    $_GET['deleteId']
-];
+                //執行 SQL 語法
+                $stmtGetId->execute($arrGetIdParam);
 
-$stmt = $pdo->prepare($sql);
-$stmt->execute($arrParam);
+                //若有找到 stmtGetId 的資料
+                if($stmtGetId->rowCount() > 0) {
+                    //取得指定 companyId 的資料 (1筆)
+                    $arrId = $stmtGetId->fetchAll(PDO::FETCH_ASSOC);
+                }
 
-if($stmt->rowCount() > 0) {
-    header("Refresh: 3; url=./company_admin.php");
-    echo "刪除成功";
-} else {
-    header("Refresh: 3; url=./company_admin.php");
-    echo "刪除失敗";
-}
+                //SQL 語法
+                $sql = "DELETE FROM `company` WHERE `companyId` = ? ";
+
+                $arrParam = [
+                    $_GET['deleteId']
+                ];
+
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($arrParam);
+
+                if($stmt->rowCount() > 0) {
+                    echo "<script>alert('刪除成功');</script>";
+                    header("Refresh: 0; url=./company_admin.php");
+                } else {
+                    echo "<script>alert('刪除失敗');</script>";
+                    header("Refresh: 0; url=./company_admin.php");
+                }
+            ?>
+        </div>
+    </div>
+</body>
+
+</html>

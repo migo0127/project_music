@@ -10,7 +10,7 @@ $sql = "DELETE FROM `company` WHERE `companyId` = ? ";
 
 $count = 0;
 
-// 先查詢出特定 id (editId)
+// 先查詢出特定 id (editId) 
 $sqlGetId = "SELECT `companyId` FROM `company` WHERE `companyId` = ? ";
 $stmtGetId = $pdo->prepare($sqlGetId);
 
@@ -47,9 +47,9 @@ for($i = 0; $i < count($_POST['chk']); $i++){
 
 
 if($count > 0) {
-    echo "<script>alert('刪除成功');</script>";
-    header("Refresh: 0; url=./company_admin.php");
+    header("Refresh: 3; url=./company_admin.php");
+    echo "刪除成功";
 } else {
-    echo "<script>alert('刪除失敗');</script>";
-    header("Refresh: 0; url=./company_admin.php");
+    header("Refresh: 3; url=./company_admin.php");
+    echo "刪除失敗";
 }
